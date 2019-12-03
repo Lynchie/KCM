@@ -1,28 +1,5 @@
 import random
-
-#makes an array of numbers - u might have guessed that the line of 1st is the stave
-img = [[random.randint(0, 1) for i in range(10)],
-        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        [random.randint(0,1) for i in range(10)],
-        [random.randint(0,1) for i in range(10)]]
-
-
-#B I C   B O I
-bigImg = [[random.randint(0,1) for i in range(100)],
-           [1 for i in range(100)],
-           [random.randint(0,1) for i in range(100)],
-           [random.randint(0,1) for i in range(100)],
-           [1 for i in range(100)]]
-
-
-
-for i in range(50):
-    bigImg.append([random.randint(0,1) for i in range(100)])
-
-#just print the image innit
-for i in range(len(img)):
-    print(img[i])
-
+import numpy as np
 
 def findStaves(image):
     foundOnes = []
@@ -38,12 +15,6 @@ def findStaves(image):
             staves.append(False)
     return staves
 
-            
-imgStaves = findStaves(img)
-#print(imgStaves)
-bigImgStaves = findStaves(bigImg)
-#print(bigImgStaves)
-
 #let's convert this into a list of y coords because that's disgusting
 def yOfStaves(staveList):
     returnList = []
@@ -51,6 +22,45 @@ def yOfStaves(staveList):
         if staveList[i]:
             returnList.append(i)
     return returnList
+
+
+def removeStave(image, staveLines):
+  newImage = image
+  for line in staveLines:
+    try:
+      newImage[line] = [int(newImage[line-1][i] or newImage[line+1][i]) for i in range(newImage.shape[0])]
+    except:
+      return image
+    else:
+      return newImage
+
+#makes an array of numbers - u might have guessed that the line of 1st is the stave
+img = [[random.randint(0, 1) for i in range(10)],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [random.randint(0,1) for i in range(10)],
+        [random.randint(0,1) for i in range(10)]]
+
+
+#B I C   B O I
+bigImg = [[random.randint(0,1) for i in range(100)],
+           [1 for i in range(100)],
+           [random.randint(0,1) for i in range(100)],
+           [random.randint(0,1) for i in range(100)],
+           [1 for i in range(100)]]
+
+for i in range(50):
+    bigImg.append([random.randint(0,1) for i in range(100)])
+
+#just print the image innit
+for i in range(len(img)):
+    print(img[i])
+            
+imgStaves = findStaves(img)
+#print(imgStaves)
+bigImgStaves = findStaves(bigImg)
+#print(bigImgStaves)
+
+
 
 print(yOfStaves(imgStaves))
 print(yOfStaves(bigImgStaves))
