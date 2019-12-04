@@ -1,66 +1,51 @@
 import random
+import cv2
 import numpy as np
 
 def findStaves(image):
     foundOnes = []
     staves = []
-    for column in range(len(image[0])):
-        for row in range(len(image)):
-            if image[row][column] == 1:
+    for column in range(image.shape[1]):
+        for row in range(image.shape[0]):
+            if image[row][column] == 255:
                 foundOnes.append(row)
-    for i in range(len(image)):
-        if foundOnes.count(i) == len(image[0]):
+    for i in range(image.shape[0]):
+        if foundOnes.count(i) == image.shape[1]:
             staves.append(True)
         else:
             staves.append(False)
-    return staves
+    return yOfStave(staves)
 
 #let's convert this into a list of y coords because that's disgusting
 def yOfStaves(staveList):
     returnList = []
     for i in range(len(staveList)):
         if staveList[i]:
-            returnList.append(i)
+            returnList.append([i,i])
     return returnList
 
 
 def removeStave(image, staveLines):
   newImage = image
   for line in staveLines:
-    try:
-      newImage[line] = [int(newImage[line-1][i] or newImage[line+1][i]) for i in range(newImage.shape[0])]
-    except:
-      return image
-    else:
-      return newImage
-
-#makes an array of numbers - u might have guessed that the line of 1st is the stave
-img = [[random.randint(0, 1) for i in range(10)],
-        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        [random.randint(0,1) for i in range(10)],
-        [random.randint(0,1) for i in range(10)]]
+    newline = np.array([int( (newImage[line[0]-1][i] or newImage[line[1]+1][i])) for i in range(newImage.shape[0])])
+    for i in line:
+      newImage[i] = newline
+  return newImage
 
 
-#B I C   B O I
-bigImg = [[random.randint(0,1) for i in range(100)],
-           [1 for i in range(100)],
-           [random.randint(0,1) for i in range(100)],
-           [random.randint(0,1) for i in range(100)],
-           [1 for i in range(100)]]
+image = np.zeros(shape=(100,100))
+image[70] = 255
+image[60] = 255
+image[50] = 255
+image[40] = 255
+image[30] = 255
 
-for i in range(50):
-    bigImg.append([random.randint(0,1) for i in range(100)])
-
-#just print the image innit
-for i in range(len(img)):
-    print(img[i])
+for x in range(30,71,10):
+  image[x+1] = [random.choice([0,0,0,255]) for i in range(100)] 
+  image[x-1] = [random.choice([0,0,0,255]) for i in range(100)]
             
-imgStaves = findStaves(img)
-#print(imgStaves)
-bigImgStaves = findStaves(bigImg)
-#print(bigImgStaves)
-
-
-
-print(yOfStaves(imgStaves))
-print(yOfStaves(bigImgStaves))
+staves = findStaves(img)
+newImage = removeStave(image,staves)
+cv2.imshow(image)
+cv2.imshow(newImage)
