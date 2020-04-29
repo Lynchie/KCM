@@ -18,12 +18,12 @@ except ImportError:
     print('Needs CV2')
 
 try:
-    import ourClassify1 as ourClassify
+    import our_classify as ourClassify
 except ImportError:
     print('Needs a classification file')
 
 try:
-    import CustomDisplay as cd
+    import custom_display as cd
 except ImportError:
     print('Needs customdisplay file')
 
@@ -377,8 +377,23 @@ def removeClassifyNote( arr, x, y, classifier, CurrentSong=ourClassify.Song() ):
               
 #------------------------- Draw ------------------------------------
         
-def big_draw_plus( arr,classifier ):
+def scale_appropriately( arr ):
+
+    if arr.shape[0]>1800 or arr.shape[1]>750:
+        
+        scalex = math.ceil(arr.shape[0]/1800)
+        scaley = math.ceil(arr.shape[1]/750)
+        scale = max(scalex,scaley)
+        print('Scaling down by',scale)
+        return arr[::scale,::scale,:],scale
+    else:
+        return arry.copy(),1
+    
+    
+def big_draw_plus( bigArr,classifier ):
     #give a 2D or 3D array, outputs a numpy window :)
+
+    arr,scale = scale_appropriately(bigArr)    
 
     surf = cd.array_to_surface( arr )
 
@@ -403,16 +418,20 @@ def big_draw_plus( arr,classifier ):
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     mx,my = pygame.mouse.get_pos()
+                    mx,my = mx*scale, my*scale
 
-                    if not arr[mx,my,0]==0:
+                    if not bigArr[mx,my,0]==0:
                         pass
                         #print('Not note')
                     else:
-                        removeClassifyNote( arr, mx,my, classifier )
+                        removeClassifyNote( bigArr, mx,my, classifier )
+                        arr,scale = scale_appropriately( bigArr )
                         
                         surf = cd.array_to_surface( arr )
                         screen.blit( surf, (0,0) )
                         pygame.display.update()
+    
+
     
 
     
