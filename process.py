@@ -1,3 +1,4 @@
+import os
 
 try:
     import numpy as np
@@ -74,9 +75,12 @@ def test():
 
 def loadImage():
 
-    from os import walk, getcwd
 
-    inDir = next(walk(getcwd()))[2]
+    scriptDir = os.path.dirname(__file__) #<-- absolute dir the script is in
+    relPath = "images"
+    folderPath = os.path.join(scriptDir,relPath)
+
+    inDir = next(os.walk(folderPath))[2]
     print('PNGs in directory:')
     for thing in inDir:
         if thing[-4:]=='.png':
@@ -86,7 +90,8 @@ def loadImage():
     path = input('Enter path of image to load: ')
     if path == '':
         path = DEFAULTPATH
-        
+
+    path = os.path.join(folderPath,path)
 
     arr = cd.load_as_array( path ) # Try and load image of array
 
@@ -101,7 +106,7 @@ def preProcess(arr):
     arr = binarize( arr[:,:,:],200 ) #Turns array into 0s and 1s
     arr *= 255
 
-    classifier = ourClassify.Classifier()
+    classifier = None#ourClassify.Classifier()
 
     return arr, classifier
 
@@ -337,7 +342,8 @@ def removeClassifyNote( arr, x, y, classifier ):
     w,h = image.shape
 
     if CLASSIFY:
-        classifier.classify( image, x, y )
+        #classifier.classify( image, x, y )
+        ourClassify.classify( image, x, y )
 
     arr[x:x+w, y:y+h,1][image==True] = 0#(1-image)*255
 
