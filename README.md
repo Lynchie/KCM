@@ -13,5 +13,5 @@ Dataset| Text files containing data for each symbol we want to recognise
 
 ### How to start VirtualEnviroment
 1. Find the Git directory in cmd
-1. In the main repository directory type _.\VENV\Scripts\activate>_
-1. Then type _python -m idlelib_ and open the python files
+1. In the main repository directory type ___.\VENV\Scripts\activate___
+1. Then type ___python -m idlelib___ and open the python files
