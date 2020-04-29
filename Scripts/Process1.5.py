@@ -46,7 +46,7 @@ Changed from 1.3: -hopefully- it actually works
 '''
 
 
-DEFAULTPATH = 'HearMeOutSmall.png'
+DEFAULTPATH = os.getcwd()[:-8]+'\Images\\HearMeOutSmall.png'
 
 STAFFDETECTION = ['sum','run'][0] #change index to change algorithm used
 STAFFLENGTHTHRESHHOLD = 500 #used by staff detection, minimum sum or run to be detected as a staff line
@@ -57,7 +57,7 @@ DRAWRELEVANT = True
 
 MORGANSTAFFS = 3 #ask morgan why the variable name is dumb
 
-TESTALL = False
+TESTALL = True
 DRAW = True
 CLASSIFY = True
 
@@ -76,19 +76,21 @@ def test():
     from os import getcwd
     
     if LOADALL == True:
-        for filename in os.listdir(getcwd()):
+        for filename in os.listdir(os.getcwd()[:-8]+'\Images'):
             if filename.endswith(".png"):
-                arr = cd.load_as_array( filename ) # Try and load image of array
+                arr = cd.load_as_array( os.getcwd()[:-8]+'\Images\\'+filename ) # Try and load image of array
+                CurrentSong = ourClassify.Song()
                 arr,classifier = preProcess(arr)
                 startTime = time.time()
-                arr = process(arr,classifier)
+                arr = process(arr,classifier,CurrentSong)
                 print('Process time:',time.time()-startTime)
                 arr = postProcess(arr,classifier)
     else:
         arr = loadImage()
+        CurrentSong = ourClassify.Song()
         arr,classifier = preProcess(arr)
         startTime = time.time()
-        arr = process(arr,classifier)
+        arr = process(arr,classifier,CurrentSong)
         print('Process time:',time.time()-startTime)
         arr = postProcess(arr,classifier)
         
@@ -99,7 +101,7 @@ def loadImage():
 
     from os import walk, getcwd
 
-    inDir = next(walk(getcwd()))[2]
+    inDir = next(walk(os.getcwd()[:-8]+'\Images'))[2]
     print('PNGs in directory:')
     for thing in inDir:
         if thing[-4:]=='.png':
@@ -112,7 +114,7 @@ def loadImage():
     
         
 
-    arr = cd.load_as_array( path ) # Try and load image of array
+    arr = cd.load_as_array( os.getcwd()[:-8]+'\Images\\'+path ) # Try and load image of array
 
     if type(arr) == type(None) : #If no image in the directory was found, return
         raise 'Image not found in directory, rerun and change input'
@@ -130,7 +132,7 @@ def preProcess(arr):
     return arr, classifier
 
 
-def process(arr,classifier):
+def process(arr,classifier,CurrentSong):
 
     s = staves( arr[:,:,0]/255 ) #calculate position of staves
     if s != []:
@@ -148,7 +150,13 @@ def process(arr,classifier):
     if TESTALL:
 
         for note in nextNote(arr[:,:,0],groups, 0):
-            removeClassifyNote( arr, note[0], note[1], classifier )
+            CurrentSong = removeClassifyNote( arr, note[0], note[1], classifier, CurrentSong )
+
+        CurrentSong.FindKey()
+        print(CurrentSong.Clef)
+        print(CurrentSong.sharps)
+        print(CurrentSong.flats)
+        print(CurrentSong.naturals)
 
     return arr
 
@@ -355,16 +363,17 @@ def floodFillRemove( arr, x, y ):
 
         
 
-def removeClassifyNote( arr, x, y, classifier ):
+def removeClassifyNote( arr, x, y, classifier, CurrentSong=ourClassify.Song() ):
 
     image,x,y = floodFillRemove( arr[:,:,0], x, y )
     w,h = image.shape
 
     if CLASSIFY:
-        classifier.classify( image, x, y, fileName, ADDDATA )
+        CurrentSong = classifier.classify( image, x, y, fileName, ADDDATA, CurrentSong )
 
     arr[x:x+w, y:y+h,1][image==True] = 0#(1-image)*255
 
+    return CurrentSong
               
 #------------------------- Draw ------------------------------------
         

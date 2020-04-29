@@ -31,10 +31,10 @@ def loadFiles():
     label = []
     names = []
     count = 0
-    directory = 'C:\\Users\\hbrit\\Desktop\\KCM\\KCMVENV'
+    directory = os.getcwd()[:-8]+'\Dataset'
     for filename in os.listdir(directory):
         if filename.endswith(".txt"):
-            f = open(filename)        
+            f = open(os.getcwd()[:-8]+'\Dataset\\'+filename)        
             names.append(filename[:-4])
             notes, label = loadNotes(notes, label, count, f)
             count += 1
@@ -43,18 +43,20 @@ def loadFiles():
             continue
     return notes, label, names
 
-def kModel(target,data):
+def kModel(data):
     notes , label, names = loadFiles()
-    model = neighbors.KNeighborsClassifier(5)
+    model = neighbors.KNeighborsClassifier(1)
     model.fit(notes,label)
     return model.predict_proba(data), names
 
     
-
-def lModel(target):
-    notes , label = loadFiles(target)
+'''
+def lModel(data):
+    notes , label, names = loadFiles()
     model = linear_model.LogisticRegression()
-
+    model.fit(notes,label)
+    return model.predict_proba(data), names
+'''
 
 def test():
 
