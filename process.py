@@ -18,12 +18,12 @@ except ImportError:
     print('Needs CV2')
 
 try:
-    import ourClassify1 as ourClassify
+    import our_classify as ourClassify
 except ImportError:
     print('Needs a classification file')
 
 try:
-    import CustomDisplay as cd
+    import custom_display as cd
 except ImportError:
     print('Needs customdisplay file')
 
