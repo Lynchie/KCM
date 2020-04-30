@@ -62,17 +62,24 @@ DRAW = True
 CLASSIFY = True
 
 LOADALL = True
-
-ADDDATA = True if input('Add new data? ') == 'y' else False
-
-if ADDDATA:
-    fileName = input("fileName: ")
-else:
-    fileName = 'other'
+fileName = 'other'
+ADDDATA = False
 
 
-def test():
 
+def test(tAll=True,lAll=True):
+    global TESTALL
+    global LOADALL
+
+    TESTALL = tAll
+    LOADALL = lAll
+        
+    from os import getcwd
+
+    ADDDATA = True if input('Add new data? ') == 'y' else False
+
+    if ADDDATA:
+        fileName = input("fileName: ")
 
     
     if LOADALL == True:
@@ -152,11 +159,12 @@ def process(arr,classifier,CurrentSong):
         for note in nextNote(arr[:,:,0],groups, 0):
             CurrentSong = removeClassifyNote( arr, note[0], note[1], classifier, CurrentSong )
 
+        print("Key: ",end="")
         CurrentSong.FindKey()
-        print(CurrentSong.Clef)
-        print(CurrentSong.sharps)
-        print(CurrentSong.flats)
-        print(CurrentSong.naturals)
+        #print(CurrentSong.Clef)
+        print(str(len(CurrentSong.sharps)) + " sharps including key")
+        print(str(len(CurrentSong.flats))+" flats including key")
+        print(str(len(CurrentSong.naturals))+" naturals")
 
     return arr
 
@@ -432,8 +440,6 @@ def big_draw_plus( bigArr,classifier ):
                         pygame.display.update()
     
 
-    
-
-    
-if __name__ == '__main__':
-    test()
+   
+#if __name__ == '__main__':
+    #test()

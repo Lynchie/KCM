@@ -1,5 +1,5 @@
 import time
-
+from Process import test
 
 def printOneByOne(message, delay=0,end=''):
 
@@ -7,13 +7,17 @@ def printOneByOne(message, delay=0,end=''):
         print(character,end=end)
         time.sleep(delay)
 
+
 def analyseSheet():
+    test(True,False)
     pass
 def classifySheet():
     pass
-def classifyManySheets():
+def analyseManySheets():
+    test(True,True)
     pass
 def showSheet():
+    test(False,False)
     pass
 
 
@@ -21,12 +25,12 @@ def main():
 
     menuOptions = ['Analyse whole sheet',
                    'Classify whole sheet',
-                   'Classify multiple sheets',
+                   'Analyse multiple sheets',
                    'Show and analyse specific symbols']
 
     menuFunctions = [analyseSheet,
                      classifySheet,
-                     classifyManySheets,
+                     analyseManySheets,
                      showSheet]
 
     printOneByOne('\n\n',delay=0.03)
