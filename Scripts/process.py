@@ -73,7 +73,7 @@ else:
 
 def test():
 
-    from os import getcwd
+
     
     if LOADALL == True:
         for filename in os.listdir(os.getcwd()[:-8]+'\Images'):
@@ -99,9 +99,9 @@ def test():
 
 def loadImage():
 
-    from os import walk, getcwd
 
-    inDir = next(walk(os.getcwd()[:-8]+'\Images'))[2]
+
+    inDir = next(os.walk(os.getcwd()[:-8]+'\Images'))[2]
     print('PNGs in directory:')
     for thing in inDir:
         if thing[-4:]=='.png':
