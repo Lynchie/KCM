@@ -1,5 +1,5 @@
 import time
-from Process import test
+from Main import test
 
 def printOneByOne(message, delay=0,end=''):
 
@@ -19,6 +19,9 @@ def analyseManySheets():
 def showSheet():
     test(False,False)
     pass
+def addData():
+    test(False,True,addData=True)
+    pass
 
 
 def main():
@@ -26,12 +29,14 @@ def main():
     menuOptions = ['Analyse whole sheet',
                    'Classify whole sheet',
                    'Analyse multiple sheets',
-                   'Show and analyse specific symbols']
+                   'Show and analyse specific symbols',
+                   'Add data to the dataset']
 
     menuFunctions = [analyseSheet,
                      classifySheet,
                      analyseManySheets,
-                     showSheet]
+                     showSheet,
+                     addData]
 
     printOneByOne('\n\n',delay=0.03)
     printOneByOne('-~-~-~-~ KCM User Interface ~-~-~-~-',delay=0.03)

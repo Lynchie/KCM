@@ -58,7 +58,7 @@ def lModel(data):
     return model.predict_proba(data), names
 '''
 
-def test():
+def testKModel():
 
     notes , label = loadFiles(input("TargetFile"))
 
@@ -109,3 +109,19 @@ def test():
     plt.xlabel("Training data percentage")
     plt.legend(["Logistic","K-Nearest Neighbour"])
     plt.show()
+
+
+def Smodel():
+    ''' Takes a song as input and returns the probability of the genre
+    --> Key
+    --> Accidentals
+    --> notes per bar
+    --> TimeSig
+
+    '''
+    pass
+
+
+
+if __name__ == '__main__':
+    Smodel()
